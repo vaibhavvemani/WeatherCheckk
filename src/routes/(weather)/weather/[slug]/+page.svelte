@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 
-	let location, country, localtime, temp, loc;
+	let country, localtime, temp, loc, lookinText, lookin;
 	let slug = $page.params.slug
 	onMount(async () => {
 		const response = await fetch(
@@ -10,10 +10,11 @@
 		);
 		const data = await response.json();
 		loc = data.location.name;
-		location = data.location.region;
 		country = data.location.country;
 		localtime = data.location.localtime;
 		temp = data.current.temp_f;
+		lookinText = data.current.condition.text;
+		lookin = data.current.condition.icon;
 	});
 
 	let image;
@@ -48,23 +49,34 @@
 	</div>
 	<div class="pastcontainer">
 		<h1>VERGANGENHEIT</h1>
+		<p>Highest tempreatures seen: </p>
+		<p>Lowest Tempreatures seen: </p>
+		<p></p>
 	</div>
 	<div class="countrycontainer">
 		<div class="countryimage">
 			<img src={image} alt="somethin">
 			<div class="countryinfo">
 				<h1 style="font-size: 60px;">{loc}</h1>
-				<h3 style="font-size: 30px;">Region: {location}</h3>
 				<h4 style="font-size: 20px;">Coutry: {country}</h4>
 				<h5 style="font-size: 16px;">Date: {localtime}</h5>
 			</div>
 		</div>
 		<div class="presentcontainer">
-			<h1>JETZT</h1>
+			<div class="title-icon">
+				<h1>JETZT</h1>
+				<img src={lookin} alt="Condition" class="condition-icon">
+
+			</div>
+			<div class="presentinfo">
+				<p>Temperature: {temp}F</p>
+				<p>Condition: {lookinText}</p>
+				<p></p>
+			</div>
 		</div>
 	</div>
 	<div class="futurecontainer">
-		<h1>ZUKUNFT</h1>~
+		<h1>ZUKUNFT</h1>
 	</div>
 </div>
 
@@ -74,6 +86,7 @@
 		width: 100%;
 		position: absolute;
 		z-index: -1;
+		background-color: #2020208f;
 	}
 	.backer img {
 		height: 100%;
@@ -138,9 +151,9 @@
 	}
 
 	.pastcontainer {
-		background-color: rgba(0, 0, 0, 0.6);
+		background-color: rgb(211, 220, 223);
 		backdrop-filter: blur(4px);
-		color: white;
+		color: rgb(0, 0, 0);
 		border-radius: 10px;
 		height: 90%;
 		width: 30%;
@@ -148,19 +161,23 @@
 	}
 
 	.presentcontainer {
-		background-color: rgba(0, 0, 0, 0.6);
+		background-color: rgb(211, 220, 223);
 		backdrop-filter: blur(4px);
-		color: white;
+		color: rgb(0, 0, 0);
 		border-radius: 10px;
 		height: 45%;
 		width: 100%;
 		padding: 10px;
 	}
 
+	.title-icon {
+		display: flex;
+		align-items: center;
+	}
 	.futurecontainer {
-		background-color: rgba(0, 0, 0, 0.6);
+		background-color: rgb(211, 220, 223);
 		backdrop-filter: blur(4px);
-		color: white;
+		color: rgb(0, 0, 0);
 		border-radius: 10px;
 		height: 90%;
 		width: 30%;
